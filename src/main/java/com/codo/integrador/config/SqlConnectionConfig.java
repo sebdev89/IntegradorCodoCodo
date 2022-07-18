@@ -11,18 +11,29 @@ public class SqlConnectionConfig {
     private static Connection connection;
     private static BasicDataSource dataSource;
 
-    private SqlConnectionConfig(){}
+    private SqlConnectionConfig(
+
+    ){}
 
 
     public static DataSource getDataSource() {
         if (dataSource == null) {
-            dataSource = new BasicDataSource();
+            try{
+                String URL = "jdbc:mysql://root:password1234@localhost:3306/integradordb?useSSL=false&useTimezone=true&serverTimezone=UTC&allowPublicKeyRetrieval=true";
+                dataSource = new BasicDataSource();
+                dataSource.setUrl(URL);
+                dataSource.setInitialSize(50);
+            }catch (Exception ex){
+                throw new RuntimeException("Error connecting to DB", ex);
+            }
         }
         return dataSource;
     }
 
-    public static Connection getConnection() throws SQLException {
-        return getDataSource().getConnection();
+    public static Connection getConnection() throws SQLException, ClassNotFoundException {
+        Class.forName("com.mysql.jdbc.Driver");
+        Connection connection = getDataSource().getConnection();
+        return connection;
     }
 
 

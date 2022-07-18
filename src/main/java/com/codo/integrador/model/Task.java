@@ -3,8 +3,16 @@ package com.codo.integrador.model;
 public class Task {
 
     private Integer id;
-    private String task;
+    private String taskName;
+    private String taskDescription;
     private String priority;
+
+    public Task(Integer id, String taskName, String taskDescription, String priority) {
+        this.id = id;
+        this.taskName = taskName;
+        this.taskDescription = taskDescription;
+        this.priority = priority;
+    }
 
     public Task() {
     }
@@ -17,12 +25,20 @@ public class Task {
         this.id = id;
     }
 
-    public String getTask() {
-        return task;
+    public String getTaskName() {
+        return taskName;
     }
 
-    public void setTask(String task) {
-        this.task = task;
+    public void setTaskName(String task) {
+        this.taskName = task;
+    }
+
+    public String getTaskDescription() {
+        return taskDescription;
+    }
+
+    public void setTaskDescription(String taskDescription) {
+        this.taskDescription = taskDescription;
     }
 
     public String getPriority() {
