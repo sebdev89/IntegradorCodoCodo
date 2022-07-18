@@ -6,31 +6,34 @@
 <jsp:include page="WEB-INF/shared/nav.jsp"></jsp:include>
 
 <div class="container">
-<c:choose>
+    <c:choose>
     <c:when test="${taskList != null && !taskList.isEmpty()}">
-        <table class="table">
-            <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">Name</th>
-                <th scope="col">Description</th>
-                <th scope="col">Priority</th>
-            </tr>
-            </thead>
-        <jsp:include page="WEB-INF/pages/tasks/components/bodyTableTask.jsp" />
-        </table>
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Description</th>
+            <th scope="col">Priority</th>
+        </tr>
+        </thead>
+        <jsp:include page="WEB-INF/pages/tasks/components/bodyTableTask.jsp"/>
+    </table>
     </c:when>
     <c:otherwise>
-        <div class="row mt-4">
-            <div class="col-12">
-                <p class="display-5 text-danger">Ooops! Parece que no hay tareas agregadas...</p>
-            </div>
+    <div class="row mt-4">
+        <div class="col-12">
+            <p class="display-5 text-danger">Ooops! Parece que no hay tareas agregadas...</p>
         </div>
+    </div>
     </c:otherwise>
 
-</c:choose>
-</div>
-
-<jsp:include page="WEB-INF/shared/endHTML.jsp"></jsp:include>
+    </c:choose>
+    <div>
+        <a href="#" class="btn btn-success"
+           data-bs-toggle="modal" data-bs-target="#modalAddTask">Add Task</a>
+    </div>
+    <jsp:include page="WEB-INF/pages/tasks/components/modalAddTask.jsp"></jsp:include>
+    <jsp:include page="WEB-INF/shared/endHTML.jsp"></jsp:include>
 
 

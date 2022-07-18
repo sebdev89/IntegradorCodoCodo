@@ -13,6 +13,8 @@ import java.util.List;
 public class TaskServiceImpl implements TaskService {
 
     private static final String GET_ALL_QUERY = "SELECT * FROM tasks";
+    private static final String ADD_QUERY = "INSERT INTO tasks VALUES (null, ?, ?, ?)";
+    private static final String DELETE_QUERY = "DELETE FROM tasks WHERE id = ?";
 
     @Override
     public List<Task> getTasks() {
@@ -20,7 +22,7 @@ public class TaskServiceImpl implements TaskService {
 
         try (Connection connection = SqlConnectionConfig.getConnection();
              PreparedStatement ps = connection.prepareStatement(GET_ALL_QUERY);
-             ResultSet rs = ps.executeQuery();){
+             ResultSet rs = ps.executeQuery();) {
 
 
             while (rs.next()) {
@@ -48,7 +50,19 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public int addTask(Task task) {
-        return 0;
+        int addCount= 0;
+        try (Connection connection = SqlConnectionConfig.getConnection();
+             PreparedStatement ps = connection.prepareStatement(ADD_QUERY)){
+            ps.setString(1,task.getTaskName());
+            ps.setString(2,task.getTaskDescription());
+            ps.setString(3,task.getPriority());
+            addCount=ps.executeUpdate();
+        }catch (SQLException ex) {
+            throw new RuntimeException("Error de SQL", ex);
+        } catch (Exception ex) {
+            throw new RuntimeException("Error al obtener alumnos", ex);
+        }
+        return addCount;
     }
 
     @Override
@@ -58,6 +72,16 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public int removeTask(int id) {
-        return 0;
+        int deleteCount = 0;
+        try (Connection connection = SqlConnectionConfig.getConnection();
+             PreparedStatement ps = connection.prepareStatement(DELETE_QUERY)){
+            ps.setInt(1,id);
+            deleteCount=ps.executeUpdate();
+        } catch (SQLException ex) {
+            throw new RuntimeException("Error de SQL", ex);
+        } catch (Exception ex) {
+            throw new RuntimeException("Error al obtener alumnos", ex);
+        }
+        return deleteCount;
     }
 }
