@@ -13,7 +13,9 @@ import java.util.List;
 public class TaskServiceImpl implements TaskService {
 
     private static final String GET_ALL_QUERY = "SELECT * FROM tasks";
+    private static final String GET_BY_ID_QUERY = "SELECT * FROM tasks WHERE id = ?";
     private static final String ADD_QUERY = "INSERT INTO tasks VALUES (null, ?, ?, ?)";
+    private static final String UPDATE_QUERY = "UPDATE tasks SET taskName = ?, taskDescription = ?, priority = ? WHERE id = ?";
     private static final String DELETE_QUERY = "DELETE FROM tasks WHERE id = ?";
 
     @Override
@@ -45,7 +47,20 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public Task getTask(int id) {
-        return null;
+        Task task = null;
+        try (Connection connection = SqlConnectionConfig.getConnection();
+             PreparedStatement ps = connection.prepareStatement(GET_BY_ID_QUERY)){
+            ps.setInt(1,id);
+            try (ResultSet rs = ps.executeQuery()){
+                rs.next();
+                task=rsToTask(rs);
+            }
+        }catch (SQLException ex) {
+            throw new RuntimeException("Error de SQL", ex);
+        } catch (Exception ex) {
+            throw new RuntimeException("Error al obtener alumnos", ex);
+        }
+        return task;
     }
 
     @Override
@@ -67,7 +82,19 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public int updateTask(Task task) {
-        return 0;
+        int updateCount = 0;
+        try ( Connection connection = SqlConnectionConfig.getConnection();  PreparedStatement ps = connection.prepareStatement(UPDATE_QUERY)) {
+           ps.setString(1,task.getTaskName());
+            ps.setString(2,task.getTaskDescription());
+            ps.setString(3,task.getPriority());
+            ps.setInt(4,task.getId());
+            updateCount = ps.executeUpdate();
+        } catch (SQLException ex) {
+            throw new RuntimeException("Error de SQL", ex);
+        } catch (Exception ex) {
+            throw new RuntimeException("Error al obtener alumnos", ex);
+        }
+        return updateCount;
     }
 
     @Override
@@ -83,5 +110,14 @@ public class TaskServiceImpl implements TaskService {
             throw new RuntimeException("Error al obtener alumnos", ex);
         }
         return deleteCount;
+    }
+
+    private Task rsToTask(ResultSet rs) throws SQLException {
+        int id = rs.getInt(1);
+        String taskName = rs.getString(2);
+        String taskDescription = rs.getString(3);
+        String priority = rs.getString(4);
+
+        return new Task(id, taskName, taskDescription, priority);
     }
 }

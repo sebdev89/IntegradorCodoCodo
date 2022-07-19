@@ -19,6 +19,7 @@ public class taskServlet extends HttpServlet {
     private TaskService taskService;
 
     private final String URI_LIST = "listTasks.jsp";
+    private final String URI_EDIT = "WEB-INF/pages/tasks/editTask.jsp";
 
     @Override
     public void init() throws ServletException {
@@ -34,7 +35,11 @@ public class taskServlet extends HttpServlet {
         Task task;
         action = action == null ? "" : action;
         switch (action) {
-            case "get":
+            case "edit":
+                id = Integer.parseInt(request.getParameter("id"));
+                task = taskService.getTask(id);
+                request.setAttribute("taskToEdit", task);
+                request.getRequestDispatcher(URI_EDIT).forward(request, response);
                 break;
             default:
                 request.setAttribute("taskList", taskService.getTasks());
@@ -59,6 +64,10 @@ public class taskServlet extends HttpServlet {
                     taskService.addTask(task);
                     break;
                 case "update":
+                    id = Integer.parseInt(request.getParameter("id"));
+                    task = taskService.getTask(id);
+                    loadTaskByParams(task, request);
+                    taskService.updateTask(task);
                     break;
                 case "delete":
                     id = Integer.parseInt(request.getParameter("id"));
@@ -73,4 +82,10 @@ public class taskServlet extends HttpServlet {
             task.setTaskDescription(request.getParameter("taskDescription"));
             task.setPriority(request.getParameter("priority"));
         }
+
+    private void loadTaskByParams (Task task, HttpServletRequest request){
+        task.setTaskName(request.getParameter("taskName"));
+        task.setTaskDescription(request.getParameter("taskDescription"));
+        task.setPriority(request.getParameter("priority"));
+    }
     }

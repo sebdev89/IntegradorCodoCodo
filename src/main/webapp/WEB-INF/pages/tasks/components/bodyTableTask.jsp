@@ -8,8 +8,8 @@
         <td>${task.taskDescription}</td>
         <td>${task.priority}</td>
         <td>
-            <button class="btn btn-secondary" >Edit</button>
-            <a class="btn btn-danger" href="${pageContext.request.contextPath}/tasks?action=delete&id=${task.id}" method="Pos">Delete</a>
+            <a class="btn btn-secondary" href="${pageContext.request.contextPath}/tasks?action=edit&id=${task.id}">Edit</a>
+            <a class="btn btn-danger" href="${pageContext.request.contextPath}/tasks?action=delete&id=${task.id}" >Delete</a>
         </td>
     </tr>
     </tbody>
